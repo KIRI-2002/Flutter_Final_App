@@ -1,7 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:y3s1_final/chatbot/screen/chat_screen.dart';
-import 'package:y3s1_final/customer/screens/checkOut_screen.dart';
+import 'package:y3s1_final/customer/screens/cart_screen.dart';
+//import 'package:y3s1_final/customer/screens/checkOut_screen.dart';
 import 'package:y3s1_final/customer/screens/favorite_screen.dart';
 import 'package:y3s1_final/customer/screens/home_screen.dart';
 import 'package:y3s1_final/customer/screens/profile_screen.dart';
@@ -17,7 +18,7 @@ class _MainCustomerState extends State<MainCustomer> {
   final List<Widget> page = [
     HomeScreenCustomer(),
     FavoriteScreenCustomer(),
-    CheckoutScreenCustomer(),
+    CartScreen(),
     ProfileScreenCustomer(),
   ];
   int currentPage = 0;
@@ -55,7 +56,7 @@ class _MainCustomerState extends State<MainCustomer> {
               const SizedBox(width: 10),
               GestureDetector(
                 onTap: () {
-                   TODO: Navigator.push(context, MaterialPageRoute(builder: (_) => ChatScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => ChatScreen()));
                 },
                 child: _Glass(
                   height: 64,
