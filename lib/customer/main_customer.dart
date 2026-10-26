@@ -16,10 +16,10 @@ class MainCustomer extends StatefulWidget {
 
 class _MainCustomerState extends State<MainCustomer> {
   final List<Widget> page = [
-    HomeScreenCustomer(),
-    FavoriteScreenCustomer(),
-    CartScreen(),
-    ProfileScreenCustomer(),
+    const HomeScreenCustomer(),
+    const FavoriteScreenCustomer(),
+    const CartScreen(),
+    const ProfileScreenCustomer(),
   ];
   int currentPage = 0;
 
@@ -53,7 +53,7 @@ class _MainCustomerState extends State<MainCustomer> {
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+               SizedBox(width: 10),
               GestureDetector(
                 onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => ChatScreen()));
@@ -97,21 +97,21 @@ class _MainCustomerState extends State<MainCustomer> {
           children: [
             Icon(item.icon, size: 28, color: _navColor),
             AnimatedSize(
-              duration: const Duration(milliseconds: 250),
+              duration:  Duration(milliseconds: 250),
               child:
                   selected
                       ? Padding(
                         padding: const EdgeInsets.only(left: 8),
                         child: Text(
                           item.label,
-                          style: const TextStyle(
+                          style:  TextStyle(
                             color: _navColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       )
-                      : const SizedBox.shrink(),
+                      :  SizedBox.shrink(),
             ),
           ],
         ),
