@@ -8,6 +8,7 @@ void toggleFavorite(int code) {
   if (!updated.remove(code)) updated.add(code);
   favoriteCodes.value = updated;
 }
+
 class DataStore {
   final List<ProductModel> products = [
     ProductModel(

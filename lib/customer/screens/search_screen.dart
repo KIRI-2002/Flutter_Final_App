@@ -41,7 +41,10 @@ class _SearchScreenState extends State<SearchScreen> {
                 children: [
                   IconButton(
                     onPressed: () => Navigator.maybePop(context),
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 20,
+                    ),
                     color: _ink,
                   ),
                   const SizedBox(width: 4),
@@ -77,17 +80,21 @@ class _SearchScreenState extends State<SearchScreen> {
                   decoration: InputDecoration(
                     hintText: 'Search products, brands...',
                     hintStyle: TextStyle(color: Colors.grey.shade500),
-                    prefixIcon: const Icon(Icons.search_rounded, color: _accent),
-                    suffixIcon: _query.isEmpty
-                        ? null
-                        : IconButton(
-                            tooltip: 'Clear search',
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() => _query = '');
-                            },
-                            icon: const Icon(Icons.close_rounded),
-                          ),
+                    prefixIcon: const Icon(
+                      Icons.search_rounded,
+                      color: _accent,
+                    ),
+                    suffixIcon:
+                        _query.isEmpty
+                            ? null
+                            : IconButton(
+                              tooltip: 'Clear search',
+                              onPressed: () {
+                                _searchController.clear();
+                                setState(() => _query = '');
+                              },
+                              icon: const Icon(Icons.close_rounded),
+                            ),
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.symmetric(vertical: 17),
                   ),
@@ -117,52 +124,55 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             const SizedBox(height: 4),
             BlocBuilder<ProductBloc, ProductState>(
-              builder: (context, state) => SizedBox(
-                height: 42,
-                child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: state.categories.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
-                  itemBuilder: (context, index) {
-                    final category = state.categories[index];
-                    final selected = category == _category;
-                    return ChoiceChip(
-                      label: Text(category),
-                      selected: selected,
-                      onSelected: (_) => setState(() => _category = category),
-                      showCheckmark: false,
-                      labelStyle: TextStyle(
-                        color: selected ? Colors.white : _ink,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                      ),
-                      backgroundColor: Colors.white,
-                      selectedColor: _ink,
-                      side: BorderSide(
-                        color: selected ? _ink : const Color(0xFFEAE8F0),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(22),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              builder:
+                  (context, state) => SizedBox(
+                    height: 42,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: state.categories.length,
+                      separatorBuilder: (_, __) => const SizedBox(width: 8),
+                      itemBuilder: (context, index) {
+                        final category = state.categories[index];
+                        final selected = category == _category;
+                        return ChoiceChip(
+                          label: Text(category),
+                          selected: selected,
+                          onSelected:
+                              (_) => setState(() => _category = category),
+                          showCheckmark: false,
+                          labelStyle: TextStyle(
+                            color: selected ? Colors.white : _ink,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
+                          backgroundColor: Colors.white,
+                          selectedColor: _ink,
+                          side: BorderSide(
+                            color: selected ? _ink : const Color(0xFFEAE8F0),
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(22),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
             ),
             const SizedBox(height: 16),
             Expanded(
               child: BlocBuilder<ProductBloc, ProductState>(
                 builder: (context, state) {
                   final query = _query.toLowerCase();
-                  final products = state.dataStore.where((product) {
-                    final matchesCategory =
-                        _category == 'All' || product.category == _category;
-                    final searchable =
-                        '${product.name} ${product.category} ${product.description}'
-                            .toLowerCase();
-                    return matchesCategory && searchable.contains(query);
-                  }).toList();
+                  final products =
+                      state.dataStore.where((product) {
+                        final matchesCategory =
+                            _category == 'All' || product.category == _category;
+                        final searchable =
+                            '${product.name} ${product.category} ${product.description}'
+                                .toLowerCase();
+                        return matchesCategory && searchable.contains(query);
+                      }).toList();
 
                   if (products.isEmpty) {
                     return _EmptySearch(
@@ -198,14 +208,15 @@ class _SearchScreenState extends State<SearchScreen> {
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 14,
-                            mainAxisSpacing: 14,
-                            childAspectRatio: 0.69,
-                          ),
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 14,
+                                mainAxisSpacing: 14,
+                                childAspectRatio: 0.69,
+                              ),
                           itemCount: products.length,
-                          itemBuilder: (context, index) =>
-                              _SearchProductCard(product: products[index]),
+                          itemBuilder:
+                              (context, index) =>
+                                  _SearchProductCard(product: products[index]),
                         ),
                       ),
                     ],
@@ -232,11 +243,12 @@ class _SearchProductCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(18),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => ProductDetailScreen(product: product),
-          ),
-        ),
+        onTap:
+            () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => ProductDetailScreen(product: product),
+              ),
+            ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -247,11 +259,12 @@ class _SearchProductCard extends StatelessWidget {
                   Image.network(
                     product.image,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      color: const Color(0xFFF0EFF5),
-                      alignment: Alignment.center,
-                      child: const Icon(Icons.image_outlined, size: 38),
-                    ),
+                    errorBuilder:
+                        (_, __, ___) => Container(
+                          color: const Color(0xFFF0EFF5),
+                          alignment: Alignment.center,
+                          child: const Icon(Icons.image_outlined, size: 38),
+                        ),
                   ),
                   Positioned(
                     top: 10,
@@ -317,12 +330,19 @@ class _SearchProductCard extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
-                      const Icon(Icons.star_rounded,
-                          color: Color(0xFFFFB547), size: 15),
+                      const Icon(
+                        Icons.star_rounded,
+                        color: Color(0xFFFFB547),
+                        size: 15,
+                      ),
                       const SizedBox(width: 2),
-                      Text(product.rate,
-                          style: const TextStyle(
-                              fontSize: 11, fontWeight: FontWeight.w600)),
+                      Text(
+                        product.rate,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ],
                   ),
                 ],
@@ -356,8 +376,11 @@ class _EmptySearch extends StatelessWidget {
                 color: Color(0xFFEDEBFF),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.search_off_rounded,
-                  color: _accent, size: 34),
+              child: const Icon(
+                Icons.search_off_rounded,
+                color: _accent,
+                size: 34,
+              ),
             ),
             const SizedBox(height: 18),
             Text(

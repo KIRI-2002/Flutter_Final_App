@@ -219,8 +219,8 @@ class _RegisterFormState extends State<RegisterForm> {
                             onPressed: _loading ? null : _register,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: _primary,
-                              disabledBackgroundColor: _primary.withValues(alpha: 
-                                0.6,
+                              disabledBackgroundColor: _primary.withValues(
+                                alpha: 0.6,
                               ),
                               elevation: 0,
                               shape: RoundedRectangleBorder(
@@ -260,7 +260,7 @@ class _RegisterFormState extends State<RegisterForm> {
                             const SizedBox(width: 4),
                             GestureDetector(
                               onTap: () => Navigator.maybePop(context),
-                              child:  Text(
+                              child: Text(
                                 'Sign in',
                                 style: TextStyle(
                                   color: _primary,

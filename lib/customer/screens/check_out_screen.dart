@@ -13,8 +13,7 @@ class CheckoutScreenCustomer extends StatefulWidget {
   const CheckoutScreenCustomer({super.key});
 
   @override
-  State<CheckoutScreenCustomer> createState() =>
-      _CheckoutScreenCustomerState();
+  State<CheckoutScreenCustomer> createState() => _CheckoutScreenCustomerState();
 }
 
 class _CheckoutScreenCustomerState extends State<CheckoutScreenCustomer> {
@@ -42,55 +41,61 @@ class _CheckoutScreenCustomerState extends State<CheckoutScreenCustomer> {
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
-        contentPadding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 68,
-              height: 68,
-              decoration: const BoxDecoration(
-                color: Color(0xFFEDE9FF),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.check_rounded,
-                  color: _checkoutAccent, size: 38),
+      builder:
+          (dialogContext) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(22),
             ),
-            const SizedBox(height: 18),
-            const Text(
-              'Order placed!',
-              style: TextStyle(
-                color: _checkoutInk,
-                fontSize: 21,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Thanks, ${_nameController.text.trim()}. Your order #$orderNumber is confirmed.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey.shade700, height: 1.4),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: _checkoutAccent,
-                  padding: const EdgeInsets.symmetric(vertical: 13),
+            contentPadding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 68,
+                  height: 68,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFEDE9FF),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.check_rounded,
+                    color: _checkoutAccent,
+                    size: 38,
+                  ),
                 ),
-                onPressed: () {
-                  Navigator.of(dialogContext).pop();
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                },
-                child: const Text('Continue shopping'),
-              ),
+                const SizedBox(height: 18),
+                const Text(
+                  'Order placed!',
+                  style: TextStyle(
+                    color: _checkoutInk,
+                    fontSize: 21,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Thanks, ${_nameController.text.trim()}. Your order #$orderNumber is confirmed.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey.shade700, height: 1.4),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: _checkoutAccent,
+                      padding: const EdgeInsets.symmetric(vertical: 13),
+                    ),
+                    onPressed: () {
+                      Navigator.of(dialogContext).pop();
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                    },
+                    child: const Text('Continue shopping'),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
     );
   }
 
@@ -146,9 +151,11 @@ class _CheckoutScreenCustomerState extends State<CheckoutScreenCustomer> {
                               label: 'Full name',
                               hint: 'Enter your name',
                               icon: Icons.person_outline_rounded,
-                              validator: (value) => value == null || value.trim().isEmpty
-                                  ? 'Please enter your name'
-                                  : null,
+                              validator:
+                                  (value) =>
+                                      value == null || value.trim().isEmpty
+                                          ? 'Please enter your name'
+                                          : null,
                             ),
                             const SizedBox(height: 14),
                             _CheckoutField(
@@ -159,8 +166,10 @@ class _CheckoutScreenCustomerState extends State<CheckoutScreenCustomer> {
                               keyboardType: TextInputType.phone,
                               validator: (value) {
                                 final phone = value?.trim() ?? '';
-                                if (phone.isEmpty) return 'Please enter your phone number';
-                                if (phone.replaceAll(RegExp(r'\D'), '').length < 8) {
+                                if (phone.isEmpty)
+                                  return 'Please enter your phone number';
+                                if (phone.replaceAll(RegExp(r'\D'), '').length <
+                                    8) {
                                   return 'Enter a valid phone number';
                                 }
                                 return null;
@@ -173,9 +182,11 @@ class _CheckoutScreenCustomerState extends State<CheckoutScreenCustomer> {
                               hint: 'Street, area, city',
                               icon: Icons.location_on_outlined,
                               maxLines: 2,
-                              validator: (value) => value == null || value.trim().isEmpty
-                                  ? 'Please enter your delivery address'
-                                  : null,
+                              validator:
+                                  (value) =>
+                                      value == null || value.trim().isEmpty
+                                          ? 'Please enter your delivery address'
+                                          : null,
                             ),
                           ],
                         ),
@@ -228,9 +239,11 @@ class _CheckoutScreenCustomerState extends State<CheckoutScreenCustomer> {
                       _CheckoutCard(
                         child: Column(
                           children: [
-                            for (var index = 0;
-                                index < state.cartModel.length;
-                                index++) ...[
+                            for (
+                              var index = 0;
+                              index < state.cartModel.length;
+                              index++
+                            ) ...[
                               _OrderItemRow(item: state.cartModel[index]),
                               if (index < state.cartModel.length - 1)
                                 const Divider(height: 22),
@@ -244,10 +257,7 @@ class _CheckoutScreenCustomerState extends State<CheckoutScreenCustomer> {
                               value: itemSubtotal,
                             ),
                             const SizedBox(height: 10),
-                            _PriceRow(
-                              label: 'Service fee',
-                              value: serviceFee,
-                            ),
+                            _PriceRow(label: 'Service fee', value: serviceFee),
                             const SizedBox(height: 10),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -258,9 +268,10 @@ class _CheckoutScreenCustomerState extends State<CheckoutScreenCustomer> {
                                       ? 'FREE'
                                       : '\$${deliveryFee.toStringAsFixed(2)}',
                                   style: TextStyle(
-                                    color: deliveryFee == 0
-                                        ? Colors.green.shade700
-                                        : _checkoutInk,
+                                    color:
+                                        deliveryFee == 0
+                                            ? Colors.green.shade700
+                                            : _checkoutInk,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -317,7 +328,9 @@ class _CheckoutScreenCustomerState extends State<CheckoutScreenCustomer> {
                     child: FilledButton.icon(
                       onPressed: () => _placeOrder(state),
                       icon: const Icon(Icons.lock_outline_rounded, size: 18),
-                      label: Text('Place order  ·  \$${total.toStringAsFixed(2)}'),
+                      label: Text(
+                        'Place order  ·  \$${total.toStringAsFixed(2)}',
+                      ),
                       style: FilledButton.styleFrom(
                         backgroundColor: _checkoutAccent,
                         foregroundColor: Colors.white,
@@ -490,13 +503,14 @@ class _OrderItemRow extends StatelessWidget {
             width: 62,
             height: 62,
             fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => Container(
-              width: 62,
-              height: 62,
-              color: const Color(0xFFF0EFF5),
-              alignment: Alignment.center,
-              child: const Icon(Icons.image_outlined, color: Colors.grey),
-            ),
+            errorBuilder:
+                (_, __, ___) => Container(
+                  width: 62,
+                  height: 62,
+                  color: const Color(0xFFF0EFF5),
+                  alignment: Alignment.center,
+                  child: const Icon(Icons.image_outlined, color: Colors.grey),
+                ),
           ),
         ),
         const SizedBox(width: 12),
@@ -573,8 +587,11 @@ class _EmptyCheckout extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.shopping_bag_outlined,
-                size: 58, color: _checkoutAccent),
+            const Icon(
+              Icons.shopping_bag_outlined,
+              size: 58,
+              color: _checkoutAccent,
+            ),
             const SizedBox(height: 16),
             const Text(
               'Your cart is empty',

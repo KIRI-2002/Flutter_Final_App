@@ -53,10 +53,13 @@ class _MainCustomerState extends State<MainCustomer> {
                   ),
                 ),
               ),
-               SizedBox(width: 10),
+              SizedBox(width: 10),
               GestureDetector(
                 onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => ChatScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => ChatScreen()),
+                  );
                 },
                 child: _Glass(
                   height: 64,
@@ -97,21 +100,21 @@ class _MainCustomerState extends State<MainCustomer> {
           children: [
             Icon(item.icon, size: 28, color: _navColor),
             AnimatedSize(
-              duration:  Duration(milliseconds: 250),
+              duration: Duration(milliseconds: 250),
               child:
                   selected
                       ? Padding(
                         padding: const EdgeInsets.only(left: 8),
                         child: Text(
                           item.label,
-                          style:  TextStyle(
+                          style: TextStyle(
                             color: _navColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                       )
-                      :  SizedBox.shrink(),
+                      : SizedBox.shrink(),
             ),
           ],
         ),

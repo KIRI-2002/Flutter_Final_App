@@ -13,7 +13,7 @@ class FavoriteScreenCustomer extends StatefulWidget {
 class _FavoriteScreenCustomerState extends State<FavoriteScreenCustomer> {
   @override
   Widget build(BuildContext context) {
-     return Scaffold(
+    return Scaffold(
       backgroundColor: Color.fromARGB(248, 255, 247, 247),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(248, 255, 247, 247),

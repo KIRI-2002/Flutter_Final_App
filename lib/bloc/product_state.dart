@@ -1,4 +1,3 @@
-
 import 'package:y3s1_final/data/data_store.dart';
 import 'package:y3s1_final/models/cart_model.dart';
 import 'package:y3s1_final/models/product_model.dart';
@@ -20,10 +19,7 @@ class ProductState {
   final String selectedCategory;
 
   List<String> get categories {
-    return [
-      "All",
-      ...dataStore.map((product) => product.category).toSet(),
-    ];
+    return ["All", ...dataStore.map((product) => product.category).toSet()];
   }
 
   List<ProductModel> get filteredProducts {

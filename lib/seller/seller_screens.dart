@@ -743,7 +743,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
               const SizedBox(height: 13),
               _label('Category'),
               DropdownButtonFormField<String>(
-                initialValue: category,
+                value: category,
                 decoration: _decoration('Category'),
                 items:
                     ['Phones', 'Audio', 'Computers', 'Accessories', 'Other']
@@ -974,7 +974,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'Customers can place orders',
             style: TextStyle(fontSize: 11),
           ),
-          activeThumbColor: navy,
+          activeColor: navy,
           value: widget.store.open,
           onChanged: (v) => setState(() => widget.store.open = v),
         ),

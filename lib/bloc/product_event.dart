@@ -16,6 +16,7 @@ final class AddCartEvent extends ProductEvent {
   final String color;
   final int quantity;
 }
+
 final class SelectCategory extends ProductEvent {
   final String category;
   SelectCategory(this.category);

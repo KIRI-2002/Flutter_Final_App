@@ -1,4 +1,3 @@
-
 import 'package:y3s1_final/models/product_model.dart';
 
 class CartModel {
