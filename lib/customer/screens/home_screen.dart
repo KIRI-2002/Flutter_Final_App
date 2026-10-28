@@ -426,59 +426,6 @@ class _CategoryGrid extends StatelessWidget {
   }
 }
 
-class _BrandRow extends StatelessWidget {
-  const _BrandRow();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 72,
-      child: BlocBuilder<ProductBloc, ProductState>(
-        builder: (context, state) {
-          return ListView.separated(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: state.categories.length,
-            separatorBuilder: (_, __) => SizedBox(width: 14),
-            // _BrandRow: itemBuilder ថ្មី
-            itemBuilder: (context, index) {
-              final category = state.categories[index];
-              final isSelected = category == state.selectedCategory;
-
-              return GestureDetector(
-                onTap:
-                    () => context.read<ProductBloc>().add(
-                      SelectCategory(category),
-                    ),
-                child: Column(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isSelected ? Colors.pinkAccent : Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      alignment: Alignment.center,
-                      child: AppText(
-                        text: category,
-                        size: 14,
-                        color: isSelected ? Colors.white : Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
 class _ProductCard extends StatelessWidget {
   final ProductModel product;
   const _ProductCard({required this.product});
@@ -583,7 +530,7 @@ class _ProductCard extends StatelessWidget {
 }
 
 class _NovaAI extends StatelessWidget {
-  const _NovaAI({super.key});
+  const _NovaAI();
 
   @override
   // ---------- Nova AI card ----------

@@ -44,7 +44,7 @@ class _ProfileScreenCustomerState extends State<ProfileScreenCustomer> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: Offset(0, 4),
           ),
@@ -99,29 +99,6 @@ class _ProfileScreenCustomerState extends State<ProfileScreenCustomer> {
   //     },
   //   );
   // }
-
-  Widget _statCard(IconData icon, String value, String label) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, color: Colors.deepPurple),
-            SizedBox(height: 6),
-            Text(
-              value,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Text(label, style: TextStyle(color: Colors.grey, fontSize: 12)),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildMenu() {
     final items = [

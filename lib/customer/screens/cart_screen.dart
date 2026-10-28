@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:y3s1_final/bloc/product_bloc.dart';
 import 'package:y3s1_final/bloc/product_event.dart';
 import 'package:y3s1_final/bloc/product_state.dart';
-import 'package:y3s1_final/customer/screens/checkOut_screen.dart';
+import 'package:y3s1_final/customer/screens/check_out_screen.dart';
 import 'package:y3s1_final/models/cart_model.dart';
 
 class CartScreen extends StatelessWidget {

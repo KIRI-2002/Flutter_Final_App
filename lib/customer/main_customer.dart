@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:y3s1_final/chatbot/screen/chat_screen.dart';
 import 'package:y3s1_final/customer/screens/cart_screen.dart';
-//import 'package:y3s1_final/customer/screens/checkOut_screen.dart';
+//import 'package:y3s1_final/customer/screens/check_out_screen.dart';
 import 'package:y3s1_final/customer/screens/favorite_screen.dart';
 import 'package:y3s1_final/customer/screens/home_screen.dart';
 import 'package:y3s1_final/customer/screens/profile_screen.dart';
@@ -146,17 +146,17 @@ class _Glass extends StatelessWidget {
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Colors.white.withOpacity(0.45),
-                Colors.white.withOpacity(0.15),
+                Colors.white.withValues(alpha: 0.45),
+                Colors.white.withValues(alpha: 0.15),
               ],
             ),
             border: Border.all(
-              color: Colors.white.withOpacity(0.7),
+              color: Colors.white.withValues(alpha: 0.7),
               width: 1.2,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withValues(alpha: 0.08),
                 blurRadius: 20,
                 offset: const Offset(0, 8),
               ),

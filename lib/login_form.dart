@@ -276,27 +276,4 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
-  Widget _socialButton(String label, IconData icon) {
-    return SizedBox(
-      height: 50,
-      child: OutlinedButton.icon(
-        onPressed: () {},
-        icon: Icon(icon, color: _ink, size: 22),
-        label: Text(
-          label,
-          style: const TextStyle(
-            color: _ink,
-            fontWeight: FontWeight.w600,
-            fontSize: 14,
-          ),
-        ),
-        style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: Color(0xFFE1E4EA)),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
-        ),
-      ),
-    );
-  }
 }

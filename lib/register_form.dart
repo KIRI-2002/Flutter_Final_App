@@ -219,7 +219,7 @@ class _RegisterFormState extends State<RegisterForm> {
                             onPressed: _loading ? null : _register,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: _primary,
-                              disabledBackgroundColor: _primary.withOpacity(
+                              disabledBackgroundColor: _primary.withValues(alpha: 
                                 0.6,
                               ),
                               elevation: 0,
