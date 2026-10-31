@@ -7,8 +7,12 @@ plugins {
 
 android {
     namespace = "com.example.y3s1_final"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+
+    // Required by flutter_secure_storage
+    compileSdk = 36
+
+    // Required by flutter_secure_storage and path_provider_android
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -20,20 +24,21 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.y3s1_final"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+
+        // flutter_secure_storage requires Android API 23 or higher.
+        minSdk = 23
+
+        // Keep your existing Flutter target SDK setting.
         targetSdk = flutter.targetSdkVersion
+
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // Keep your existing release signing configuration.
             signingConfig = signingConfigs.getByName("debug")
         }
     }

@@ -3,6 +3,8 @@ import 'package:y3s1_final/models/product_model.dart';
 
 sealed class ProductEvent {}
 
+final class LoadProductsEvent extends ProductEvent {}
+
 final class AddCartEvent extends ProductEvent {
   AddCartEvent({
     required this.product,
@@ -19,6 +21,7 @@ final class AddCartEvent extends ProductEvent {
 
 final class SelectCategory extends ProductEvent {
   final String category;
+
   SelectCategory(this.category);
 }
 

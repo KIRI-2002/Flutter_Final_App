@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:y3s1_final/customer/main_customer.dart';
+import 'package:y3s1_final/services/commerce_api.dart';
 
 const _primary = Color.fromARGB(255, 30, 37, 87);
 const _ink = Color(0xFF1F2430);
@@ -34,17 +36,64 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   Future<void> _register() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
     if (!_agree) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please accept the Terms and Conditions')),
       );
       return;
     }
-    setState(() => _loading = true);
-    await Future.delayed(const Duration(seconds: 1));
-    if (!mounted) return;
-    setState(() => _loading = false);
+
+    if (_loading) return;
+
+    FocusScope.of(context).unfocus();
+
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      await CommerceApi.instance.register(
+        name: _nameCtrl.text,
+        email: _emailCtrl.text,
+        phone: _phoneCtrl.text,
+        password: _passCtrl.text,
+        passwordConfirmation: _confirmCtrl.text,
+      );
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Account created successfully! Please sign in.'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const MainCustomer()),
+        (route) => false,
+      );
+    } catch (error) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Registration failed: $error'),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 5),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
+    }
   }
 
   @override

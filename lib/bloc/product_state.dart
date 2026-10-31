@@ -1,4 +1,3 @@
-import 'package:y3s1_final/data/data_store.dart';
 import 'package:y3s1_final/models/cart_model.dart';
 import 'package:y3s1_final/models/product_model.dart';
 
@@ -8,47 +7,60 @@ class ProductState {
     List<CartModel>? cartModel,
     int? quantity,
     String? selectedCategory,
-  }) : dataStore = dataStore ?? DataStore().products,
+    this.isLoading = false,
+    this.error,
+  }) : dataStore = dataStore ?? const [],
        cartModel = cartModel ?? const [],
        quantity = quantity ?? 1,
-       selectedCategory = selectedCategory ?? "All";
+       selectedCategory = selectedCategory ?? 'All';
 
   final List<ProductModel> dataStore;
   final List<CartModel> cartModel;
   final int quantity;
   final String selectedCategory;
+  final bool isLoading;
+  final String? error;
 
   List<String> get categories {
-    return ["All", ...dataStore.map((product) => product.category).toSet()];
+    return ['All', ...dataStore.map((product) => product.category).toSet()];
   }
 
   List<ProductModel> get filteredProducts {
-    if (selectedCategory == "All") return dataStore;
+    if (selectedCategory == 'All') {
+      return dataStore;
+    }
+
     const homeCategoryGroups = <String, Set<String>>{
-      "Phones": {"Case", "Screen Protector", "Holder"},
-      "Laptops": {"Cable", "Charger", "Power Bank", "Stand"},
-      "Tablets": {"Case", "Screen Protector", "Stand", "Charger"},
-      "Audio": {"Earbuds", "Audio", "Speaker", "Headphones"},
-      "Watches": {"Smart Watch", "Wearable"},
-      "Gaming": {"Headphones", "Speaker"},
-      "Accessories": {
-        "Case",
-        "Screen Protector",
-        "Charger",
-        "Cable",
-        "Power Bank",
-        "Wireless Charger",
-        "Stand",
-        "Holder",
+      'Phones': {'Phones', 'Case', 'Screen Protector', 'Holder'},
+      'Laptops': {'Laptops', 'Cable', 'Charger', 'Power Bank', 'Stand'},
+      'Tablets': {'Tablets', 'Case', 'Screen Protector', 'Stand', 'Charger'},
+      'Audio': {'Audio', 'Earbuds', 'Speaker', 'Headphones'},
+      'Watches': {'Watches', 'Smart Watch', 'Wearable'},
+      'Gaming': {'Gaming', 'Headphones', 'Speaker'},
+      'Accessories': {
+        'Accessories',
+        'Case',
+        'Screen Protector',
+        'Charger',
+        'Cable',
+        'Power Bank',
+        'Wireless Charger',
+        'Stand',
+        'Holder',
       },
     };
+
     final groupedCategories = homeCategoryGroups[selectedCategory];
+
     if (groupedCategories != null) {
-      return dataStore
-          .where((product) => groupedCategories.contains(product.category))
-          .toList();
+      return dataStore.where((product) {
+        return groupedCategories.contains(product.category);
+      }).toList();
     }
-    return dataStore.where((p) => p.category == selectedCategory).toList();
+
+    return dataStore.where((product) {
+      return product.category == selectedCategory;
+    }).toList();
   }
 
   ProductState copyWith({
@@ -56,12 +68,17 @@ class ProductState {
     List<CartModel>? cartModel,
     int? quantity,
     String? selectedCategory,
+    bool? isLoading,
+    String? error,
+    bool clearError = false,
   }) {
     return ProductState(
       dataStore: dataStore ?? this.dataStore,
       cartModel: cartModel ?? this.cartModel,
       quantity: quantity ?? this.quantity,
       selectedCategory: selectedCategory ?? this.selectedCategory,
+      isLoading: isLoading ?? this.isLoading,
+      error: clearError ? null : (error ?? this.error),
     );
   }
 
@@ -83,9 +100,8 @@ class ProductState {
   }
 
   double subtotal() {
-    if (cartModel.isEmpty) {
-      return 0;
-    }
-    return getotal() - getDiscount() + 1.0;
+    return cartModel.fold<double>(0.0, (total, item) {
+      return total + (item.product.price * item.quantity);
+    });
   }
 }

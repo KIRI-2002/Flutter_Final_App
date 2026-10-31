@@ -1,34 +1,67 @@
 import 'package:bloc/bloc.dart';
+
 import 'package:y3s1_final/bloc/product_event.dart';
 import 'package:y3s1_final/bloc/product_state.dart';
 import 'package:y3s1_final/models/cart_model.dart';
+import 'package:y3s1_final/models/product_model.dart';
+import 'package:y3s1_final/services/commerce_api.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   ProductBloc() : super(ProductState()) {
+    on<LoadProductsEvent>(_loadProducts);
+
     on<AddCartEvent>(_addCart);
     on<RemoveCartEvent>(_removeCart);
     on<UpdateQuantityEvent>(_updateQuantity);
+
     on<ClearCartEvent>((event, emit) {
       emit(state.copyWith(cartModel: const []));
     });
+
     on<IncrementEvent>((event, emit) {
       emit(state.copyWith(quantity: state.quantity + 1));
     });
+
     on<DescrementEvent>((event, emit) {
       emit(
         state.copyWith(quantity: state.quantity > 1 ? state.quantity - 1 : 1),
       );
     });
+
     on<ResetQuantityEvent>((event, emit) {
       emit(state.copyWith(quantity: 1));
     });
+
     on<SelectCategory>((event, emit) {
       emit(state.copyWith(selectedCategory: event.category));
     });
   }
 
+  Future<void> _loadProducts(
+    LoadProductsEvent event,
+    Emitter<ProductState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true, clearError: true));
+
+    try {
+      final rows = await CommerceApi.instance.products();
+
+      final products =
+          rows.map((row) {
+            return ProductModel.fromLaravel(row);
+          }).toList();
+
+      emit(
+        state.copyWith(dataStore: products, isLoading: false, clearError: true),
+      );
+    } catch (error) {
+      emit(state.copyWith(isLoading: false, error: error.toString()));
+    }
+  }
+
   void _addCart(AddCartEvent event, Emitter<ProductState> emit) {
     final cart = List<CartModel>.from(state.cartModel);
+
     final existingIndex = cart.indexWhere(
       (item) =>
           item.product.code == event.product.code &&
@@ -47,6 +80,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       );
     } else {
       final existing = cart[existingIndex];
+
       cart[existingIndex] = existing.copyCart(
         quantity: existing.quantity + event.quantity,
       );
@@ -58,6 +92,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   void _removeCart(RemoveCartEvent event, Emitter<ProductState> emit) {
     final cart =
         state.cartModel.where((item) => item != event.removeCart).toList();
+
     emit(state.copyWith(cartModel: cart));
   }
 
@@ -67,6 +102,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
           if (item == event.cartModel) {
             return item.copyCart(quantity: event.quantity);
           }
+
           return item;
         }).toList();
 

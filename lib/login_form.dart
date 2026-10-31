@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:y3s1_final/register_form.dart';
+import 'package:y3s1_final/services/commerce_api.dart';
 
 const _primary = Color.fromARGB(255, 30, 37, 87);
 const _ink = Color(0xFF1F2430);
@@ -15,10 +16,13 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
+
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
   final _phoneCtrl = TextEditingController();
+
   bool _obscure = true;
+  bool _loggingIn = false;
 
   @override
   void dispose() {
@@ -28,19 +32,81 @@ class _LoginFormState extends State<LoginForm> {
     super.dispose();
   }
 
-  void _signUp() {
-    if (!_formKey.currentState!.validate()) return;
+  Future<void> _login() async {
+    if (_loggingIn) return;
+
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    FocusScope.of(context).unfocus();
+
+    setState(() {
+      _loggingIn = true;
+    });
+
+    try {
+      await CommerceApi.instance.login(_emailCtrl.text.trim(), _passCtrl.text);
+
+      // DEBUG: Check which role Laravel returns.
+      debugPrint('LOGIN ROLE: ${CommerceApi.instance.role}');
+      debugPrint('LOGIN USER: ${CommerceApi.instance.currentUser}');
+
+      if (!mounted) return;
+
+      final role = CommerceApi.instance.role?.trim().toLowerCase();
+
+      final token = CommerceApi.instance.token;
+
+      if (token == null || token.isEmpty) {
+        throw Exception('Login failed: Authentication token is missing.');
+      }
+
+      if (role == 'customer') {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          '/customer',
+          (route) => false,
+        );
+      } else if (role == 'seller') {
+        Navigator.pushNamedAndRemoveUntil(context, '/seller', (route) => false);
+      } else {
+        throw Exception('Unknown account role: $role');
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      String message = e.toString();
+
+      if (message.startsWith('Exception: ')) {
+        message = message.substring(11);
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 5),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loggingIn = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 30, 37, 87),
+      backgroundColor: _primary,
       body: SafeArea(
         bottom: false,
         child: Column(
           children: [
-            // ---------- Header ----------
+            // HEADER
             Padding(
               padding: const EdgeInsets.fromLTRB(28, 32, 28, 28),
               child: Row(
@@ -52,14 +118,14 @@ class _LoginFormState extends State<LoginForm> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.shopping_bag_outlined,
                       color: _primary,
                       size: 28,
                     ),
                   ),
-                  SizedBox(width: 14),
-                  Expanded(
+                  const SizedBox(width: 14),
+                  const Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -82,11 +148,12 @@ class _LoginFormState extends State<LoginForm> {
                 ],
               ),
             ),
-            // ---------- White card ----------
+
+            // WHITE LOGIN CARD
             Expanded(
               child: Container(
                 width: double.infinity,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
                 ),
@@ -98,43 +165,49 @@ class _LoginFormState extends State<LoginForm> {
                     key: _formKey,
                     child: Column(
                       children: [
+                        // EMAIL
                         _field(
                           controller: _emailCtrl,
                           label: 'Email',
                           icon: Icons.mail_outline_rounded,
                           type: TextInputType.emailAddress,
-                          validator: (v) {
-                            if (v == null || v.trim().isEmpty) {
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
                               return 'Enter your email';
                             }
+
                             if (!RegExp(
                               r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
-                            ).hasMatch(v.trim())) {
+                            ).hasMatch(value.trim())) {
                               return 'Invalid email';
                             }
+
                             return null;
                           },
                         ),
 
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
+
+                        // PHONE NUMBER - OPTIONAL
                         _field(
                           controller: _phoneCtrl,
-                          label: 'Phone',
+                          label: 'Phone (Optional)',
                           icon: Icons.phone_outlined,
                           type: TextInputType.phone,
-                          action: TextInputAction.done,
-                          validator:
-                              (v) =>
-                                  (v == null || v.trim().length < 8)
-                                      ? 'Invalid phone number'
-                                      : null,
+                          validator: (value) {
+                            return null;
+                          },
                         ),
-                        SizedBox(height: 16),
+
+                        const SizedBox(height: 16),
+
+                        // PASSWORD
                         _field(
                           controller: _passCtrl,
                           label: 'Password',
                           icon: Icons.lock_outline_rounded,
                           obscure: _obscure,
+                          action: TextInputAction.done,
                           suffix: IconButton(
                             icon: Icon(
                               _obscure
@@ -143,41 +216,61 @@ class _LoginFormState extends State<LoginForm> {
                               color: _muted,
                               size: 20,
                             ),
-                            onPressed:
-                                () => setState(() => _obscure = !_obscure),
+                            onPressed: () {
+                              setState(() {
+                                _obscure = !_obscure;
+                              });
+                            },
                           ),
-                          validator:
-                              (v) =>
-                                  (v == null || v.length < 6)
-                                      ? 'At least 6 characters'
-                                      : null,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Enter your password';
+                            }
+
+                            return null;
+                          },
                         ),
-                        SizedBox(height: 24),
-                        // Sign up button
+
+                        const SizedBox(height: 24),
+
+                        // LOGIN BUTTON
                         SizedBox(
                           width: double.infinity,
                           height: 54,
                           child: ElevatedButton(
-                            onPressed: _signUp,
+                            onPressed: _loggingIn ? null : _login,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(255, 30, 37, 87),
+                              backgroundColor: _primary,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(16),
                               ),
                             ),
-                            child: Text(
-                              'Login',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
+                            child:
+                                _loggingIn
+                                    ? const SizedBox(
+                                      width: 22,
+                                      height: 22,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                    : const Text(
+                                      'Login',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
                           ),
                         ),
-                        SizedBox(height: 14),
-                        Text.rich(
+
+                        const SizedBox(height: 14),
+
+                        // TERMS AND CONDITIONS
+                        const Text.rich(
                           TextSpan(
                             text: 'By signing up, you agree to our ',
                             style: TextStyle(color: _muted, fontSize: 13),
@@ -193,13 +286,15 @@ class _LoginFormState extends State<LoginForm> {
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: 28),
-                        // Switch to sign in
+
+                        const SizedBox(height: 28),
+
+                        // SIGN UP
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              "Already have an account?",
+                            const Text(
+                              'Do not have an account?',
                               style: TextStyle(color: _muted, fontSize: 14),
                             ),
                             TextButton(
@@ -207,11 +302,11 @@ class _LoginFormState extends State<LoginForm> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => RegisterForm(),
+                                    builder: (_) => const RegisterForm(),
                                   ),
                                 );
                               },
-                              child: Text(
+                              child: const Text(
                                 'Sign up',
                                 style: TextStyle(
                                   color: _primary,
@@ -234,6 +329,7 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
+  // REUSABLE INPUT FIELD
   Widget _field({
     required TextEditingController controller,
     required String label,
@@ -244,10 +340,12 @@ class _LoginFormState extends State<LoginForm> {
     Widget? suffix,
     String? Function(String?)? validator,
   }) {
-    OutlineInputBorder border(Color c, [double w = 1]) => OutlineInputBorder(
-      borderRadius: BorderRadius.circular(14),
-      borderSide: BorderSide(color: c, width: w),
-    );
+    OutlineInputBorder border(Color color, [double width = 1]) {
+      return OutlineInputBorder(
+        borderRadius: BorderRadius.circular(14),
+        borderSide: BorderSide(color: color, width: width),
+      );
+    }
 
     return TextFormField(
       controller: controller,
